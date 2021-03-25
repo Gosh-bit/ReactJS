@@ -8,9 +8,6 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const privateRoutes = require('./routes/private');
 
-const PORT = 5000;
-const DB_CONNECTION = 'mongodb://localhost:/webAPP';
-
 const errorHandler = require('./middleware/error');
 const app = express();
 
@@ -29,11 +26,13 @@ app.use('/api/private', privateRoutes);
 app.use(errorHandler);
 
 mongoose
-	.connect(DB_CONNECTION, {
+	.connect(process.env.DB_CONNECTION, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false,
 	})
-	.then(() => app.listen(PORT, console.log.bind(console, `Server is running on http://localhost:${PORT}`)))
+	.then(() =>
+		app.listen(process.env.PORT, console.log.bind(console, `Server is running on http://localhost:${process.env.PORT}`))
+	)
 	.catch((error) => console.log(error.message));
